@@ -1,7 +1,7 @@
 import { input, select } from '@inquirer/prompts';
 import ora from 'ora';
 import logger from '../utils/logger';
-import saveConfig from '../utils/saveConfig';
+import { saveConfig } from '../utils/config';
 import { Config } from '../types/config';
 
 async function defineConfig(): Promise<Config> {
