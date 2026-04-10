@@ -1,0 +1,16 @@
+<% if(language==='typescript' ) { %>
+<% for(const [entity,fields] of Object.entries(schemas)) { %>
+export interface <%=entity.charAt(0).toUpperCase() + entity.slice(1) %>Payload {
+<% for(const field of fields) { %>
+  <%= field.name %>: <%= field.type %>;
+<% } %>
+}
+
+export interface <%=entity.charAt(0).toUpperCase() + entity.slice(1) %> extends <%=entity.charAt(0).toUpperCase() + entity.slice(1) %>Payload {
+  id:string;
+  createdAt:string;
+  updatedAt:string;
+}
+
+<% } %>
+<% } %>
