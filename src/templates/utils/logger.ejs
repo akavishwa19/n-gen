@@ -1,0 +1,23 @@
+<% if (type === 'esm') { %>
+import pino from 'pino';
+<% } else { %>
+const pino = require('pino');
+<% } %>
+
+const transport = pino.transport({
+  target: 'pino-pretty',
+  options: {
+    destination: 1
+  }
+});
+
+const options =
+  process.env.NODE_ENV === 'development' ? { level: 'trace' } : {};
+
+const logger = pino(options, transport);
+
+<% if (type === 'esm') { %>
+export default logger;
+<% } else { %>
+module.exports = logger;
+<% } %>

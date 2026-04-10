@@ -59,6 +59,17 @@ async function defineConfig(): Promise<Config> {
       ]
     });
 
+    config.logger = await select({
+      message: 'Do you want a logger for your setup?',
+      choices: [
+        { name: 'Yes (pino logger)', value: 'yes' },
+        {
+          name: 'No (iam okay with console logs)',
+          value: 'no'
+        }
+      ]
+    });
+
     const apis = await input({
       message: 'Enter the entities for your CRUD app [comma seperated]:',
       validate: (value: string) => {

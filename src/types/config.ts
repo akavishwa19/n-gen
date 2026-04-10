@@ -4,6 +4,7 @@ export interface Config {
   database: 'mongodb' | 'mysql';
   docker: 'yes' | 'no';
   structure: 'basic' | 'advanced' | 'ultra';
+  logger: 'yes' | 'no';
   apis: string[];
   schemas: Record<string, Fields[]>;
 }
