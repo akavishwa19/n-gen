@@ -1,9 +1,9 @@
 <% if(type==='esm'){ %>
 import express from 'express';
-import { create, update, remove, get, list } from '../controllers/<%= entity %>';
+import { create, update, remove, get, list } from '../controllers/<%= api %>';
 <% } else { %>
 const express = require('express') ;
-const { create, update, remove, get, list } = require('../controllers/<%= entity %>');
+const { create, update, remove, get, list } = require('../controllers/<%= api %>');
 <% } %>
 const router = express.Router();
 

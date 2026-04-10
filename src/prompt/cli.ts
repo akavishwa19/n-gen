@@ -67,7 +67,7 @@ async function defineConfig(): Promise<Config> {
       message: 'Enter the entities for your CRUD app [comma seperated]:',
       validate: (value: string) => {
         if (!value.trim()) {
-          return 'Please anter at least one entity name to create your endpoints';
+          return 'Please anter at least one api entity name to create your endpoints';
         }
         return true;
       }

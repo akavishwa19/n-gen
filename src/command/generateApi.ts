@@ -8,9 +8,9 @@ async function generateApi() {
     throw new Error('API entity is required to generate template');
   }
 
-  for (const entity of config.apis) {
+  for (const api of config.apis) {
     await renderTemplate('route.ejs', {
-      entity: entity,
+      api: api,
       type: config.type,
       language: config.language
     });
