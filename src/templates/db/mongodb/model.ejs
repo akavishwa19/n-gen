@@ -1,0 +1,80 @@
+<%
+const typeName = entity.charAt(0).toUpperCase() + entity.slice(1);
+const className = typeName + 's';
+const collectionName = entity.toLowerCase() + 's';
+
+const fieldNames = fields.map(f => f.name);
+%>
+
+<% if(type==='esm') { %>
+import { getDb } from '../db/client';
+<% if(language==='typescript') { %>
+import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
+<% } %>
+<% } else { %>
+const { getDb } = require('../db/client');
+<% } %>
+
+class <%= className %> {
+  static collection() {
+    return getDb().collection('<%= collectionName %>');
+  }
+
+  static async insert(
+    id<% if(language==='typescript') { %>: string<% } %>,
+    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
+  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    const doc = {
+      id,
+<% for (const f of fieldNames) { %>
+      <%= f %>: payload.<%= f %>,
+<% } %>
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    await this.collection().insertOne(doc);
+    return id;
+  }
+
+  static async update(
+    id<% if(language==='typescript') { %>: string<% } %>,
+    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
+  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    const updateDoc = {
+      $set: {
+<% for (const f of fieldNames) { %>
+        <%= f %>: payload.<%= f %>,
+<% } %>
+        updatedAt: new Date().toISOString()
+      }
+    };
+
+    await this.collection().updateOne({ id }, updateDoc);
+    return id;
+  }
+
+  static async delete(
+    id<% if(language==='typescript') { %>: string<% } %>
+  )<% if(language==='typescript') { %>: Promise<void><% } %> {
+    await this.collection().deleteOne({ id });
+  }
+
+  static async get(
+    id<% if(language==='typescript') { %>: string<% } %>
+  )<% if(language==='typescript') { %>: Promise<<%= typeName %> | null><% } %> {
+    const doc = await this.collection().findOne({ id });
+    return doc || null;
+  }
+
+  static async list()<% if(language==='typescript') { %>: Promise<<%= typeName %>[]><% } %> {
+    const docs = await this.collection().find().toArray();
+    return docs;
+  }
+}
+
+<% if(type==='esm') { %>
+export { <%= className %> };
+<% } else { %>
+module.exports = { <%= className %> };
+<% } %>

@@ -1,0 +1,117 @@
+<%
+const typeName = entity.charAt(0).toUpperCase() + entity.slice(1);
+const className = typeName + 's';
+const tableName = entity.toLowerCase() + 's';
+
+const fieldNames = fields.map(f => f.name);
+
+const allColumns = ['id', ...fieldNames, 'createdAt', 'updatedAt'];
+
+const insertColumns = ['id', ...fieldNames];
+const insertPlaceholders = insertColumns.map(() => '?').join(', ');
+const insertFieldsString = insertColumns.join(',');
+
+const updateFields = fieldNames.map(f => `${f} = ?`).join(', ');
+%>
+
+<% if(type==='esm') { %>
+import { dbClient } from '../db/client';
+<% if(language==='typescript') { %>
+import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
+import { RowDataPacket } from 'mysql2';
+<% } %>
+<% } else { %>
+const { dbClient } = require('../db/client');
+<% } %>
+
+class <%= className %> {
+  static columns = [
+<% for (const col of allColumns) { %>
+    '<%= col %>',
+<% } %>
+  ];
+
+  static selectColumns()<% if(language==='typescript') { %>: string<% } %> {
+    return `${this.columns.join(',')}`;
+  }
+
+  static rowTo<%= typeName %>(row<% if(language==='typescript') { %>: RowDataPacket<% } %>)<% if(language==='typescript') { %>: <%= typeName %><% } %> {
+    return {
+<% for (const col of allColumns) { %>
+      <%= col %>: row.<%= col %>,
+<% } %>
+    };
+  }
+
+  static async insert(
+    id<% if(language==='typescript') { %>: string<% } %>,
+    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
+  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    const sql = `insert into <%= tableName %> (<%= insertFieldsString %>) values (<%= insertPlaceholders %>)`;
+
+    const values = [
+      id,
+<% for (const f of fieldNames) { %>
+      payload.<%= f %>,
+<% } %>
+    ];
+
+    await dbClient.query(sql, values);
+    return id;
+  }
+
+  static async update(
+    id<% if(language==='typescript') { %>: string<% } %>,
+    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
+  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    const sql = `update <%= tableName %> set <%= updateFields %> where id = ?`;
+
+    const values = [
+<% for (const f of fieldNames) { %>
+      payload.<%= f %>,
+<% } %>
+      id
+    ];
+
+    await dbClient.query(sql, values);
+    return id;
+  }
+
+  static async delete(id<% if(language==='typescript') { %>: string<% } %>)<% if(language==='typescript') { %>: Promise<void><% } %> {
+    const sql = `delete from <%= tableName %> where id = ?`;
+    await dbClient.query(sql, [id]);
+  }
+
+  static async get(id<% if(language==='typescript') { %>: string<% } %>)<% if(language==='typescript') { %>: Promise<<%= typeName %> | null><% } %> {
+    const sql = `select ${this.selectColumns()} from <%= tableName %> where id = ?`;
+
+<% if(language==='typescript') { %>
+    const [rows] = await dbClient.query<RowDataPacket[]>(sql, [id]);
+<% } else { %>
+    const [rows] = await dbClient.query(sql, [id]);
+<% } %>
+
+    const firstRow = rows[0];
+    if (!firstRow) return null;
+
+    return this.rowTo<%= typeName %>(firstRow);
+  }
+
+  static async list()<% if(language==='typescript') { %>: Promise<<%= typeName %>[]><% } %> {
+    const sql = `select ${this.selectColumns()} from <%= tableName %>`;
+
+<% if(language==='typescript') { %>
+    const [rows] = await dbClient.query<RowDataPacket[]>(sql);
+    return rows.map((row: RowDataPacket) => this.rowTo<%= typeName %>(row));
+<% } else { %>
+    const [rows] = await dbClient.query(sql);
+    return rows.map(row => this.rowTo<%= typeName %>(row));
+<% } %>
+  }
+}
+
+<% if(type==='esm') { %>
+export { <%= className %> };
+<% } else { %>
+module.exports = { <%= className %> };
+<% } %>
