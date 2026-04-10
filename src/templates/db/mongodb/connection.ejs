@@ -1,10 +1,19 @@
 <% if(type==='esm') { %>
 import { MongoClient<% if(language==='typescript') { %>, Db<% } %> } from 'mongodb';
+<% if (logger === 'yes') { %>
 import logger from '../utils/logger';
+<% } %>
 <% } else { %>
 const { MongoClient } = require('mongodb');
+<% if (logger === 'yes') { %>
 const logger = require('../utils/logger');
 <% } %>
+<% } %>
+
+<%
+const logError = logger === 'yes' ? 'logger.error' : 'console.error';
+const logInfo = logger === 'yes' ? 'logger.info' : 'console.log';
+%>
 
 const uri = process.env.MONGO_URI;
 
@@ -16,9 +25,9 @@ const connectToDb = async () <% if (language === 'typescript') { %>: Promise<voi
   try {
     await client.connect();
     db = client.db(process.env.DB_NAME);
-    logger.info('connected to mongodb successfully');
+    <%= logInfo %>('connected to mongodb successfully');
   } catch (error <% if(language==='typescript') { %>: unknown<% } %>) {
-    logger.error({ error }, 'error connecting to mongodb');
+    <%= logError %>({ error }, 'error connecting to mongodb');
     throw new Error('error connecting to mongodb');
   }
 };
