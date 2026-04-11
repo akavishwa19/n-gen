@@ -6,6 +6,11 @@ function getRoot(): string {
   return process.cwd();
 }
 
+function getCliRoot(): string {
+  const dirName = __dirname;
+  return buildPath(dirName, '..', '..');
+}
+
 function buildPath(...paths: string[]): string {
   return path.join(...paths);
 }
@@ -68,6 +73,7 @@ function saveAsJson(filePath: string, data: unknown): void {
 
 export {
   getRoot,
+  getCliRoot,
   buildPath,
   ensureDirectory,
   readFile,
