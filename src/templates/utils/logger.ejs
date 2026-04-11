@@ -1,8 +1,8 @@
-<% if (type === 'esm') { %>
+<%_ if (type === 'esm') { _%>
 import pino from 'pino';
-<% } else { %>
+<%_ } else { _%>
 const pino = require('pino');
-<% } %>
+<%_ } _%>
 
 const transport = pino.transport({
   target: 'pino-pretty',
@@ -16,8 +16,8 @@ const options =
 
 const logger = pino(options, transport);
 
-<% if (type === 'esm') { %>
+<%_ if (type === 'esm') { _%>
 export default logger;
-<% } else { %>
+<%_ } else { _%>
 module.exports = logger;
-<% } %>
+<%_ } _%>
