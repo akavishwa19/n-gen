@@ -6,14 +6,14 @@ const collectionName = entity.toLowerCase() + 's';
 const fieldNames = fields.map(f => f.name);
 %>
 
-<% if(type==='esm') { %>
+<%_ if (type === 'esm') { _%>
 import { getDb } from '../db/client';
-<% if(language==='typescript') { %>
+<%_ if (language === 'typescript') { _%>
 import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
-<% } %>
-<% } else { %>
+<%_ } _%>
+<%_ } else { _%>
 const { getDb } = require('../db/client');
-<% } %>
+<%_ } _%>
 
 class <%= className %> {
   static collection() {
@@ -21,14 +21,14 @@ class <%= className %> {
   }
 
   static async insert(
-    id<% if(language==='typescript') { %>: string<% } %>,
-    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
-  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>,
+    payload<%_ if (language === 'typescript') { _%>: <%= typeName %>Payload<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<string><%_ } _%> {
     const doc = {
       id,
-<% for (const f of fieldNames) { %>
+<%_ for (const f of fieldNames) { _%>
       <%= f %>: payload.<%= f %>,
-<% } %>
+<%_ } _%>
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -38,14 +38,14 @@ class <%= className %> {
   }
 
   static async update(
-    id<% if(language==='typescript') { %>: string<% } %>,
-    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
-  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>,
+    payload<%_ if (language === 'typescript') { _%>: <%= typeName %>Payload<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<string><%_ } _%> {
     const updateDoc = {
       $set: {
-<% for (const f of fieldNames) { %>
+<%_ for (const f of fieldNames) { _%>
         <%= f %>: payload.<%= f %>,
-<% } %>
+<%_ } _%>
         updatedAt: new Date().toISOString()
       }
     };
@@ -55,26 +55,26 @@ class <%= className %> {
   }
 
   static async delete(
-    id<% if(language==='typescript') { %>: string<% } %>
-  )<% if(language==='typescript') { %>: Promise<void><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<void><%_ } _%> {
     await this.collection().deleteOne({ id });
   }
 
   static async get(
-    id<% if(language==='typescript') { %>: string<% } %>
-  )<% if(language==='typescript') { %>: Promise<<%= typeName %> | null><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<<%= typeName %> | null><%_ } _%> {
     const doc = await this.collection().findOne({ id });
     return doc || null;
   }
 
-  static async list()<% if(language==='typescript') { %>: Promise<<%= typeName %>[]><% } %> {
+  static async list()<%_ if (language === 'typescript') { _%>: Promise<<%= typeName %>[]><%_ } _%> {
     const docs = await this.collection().find().toArray();
     return docs;
   }
 }
 
-<% if(type==='esm') { %>
+<%_ if (type === 'esm') { _%>
 export { <%= className %> };
-<% } else { %>
+<%_ } else { _%>
 module.exports = { <%= className %> };
-<% } %>
+<%_ } _%>

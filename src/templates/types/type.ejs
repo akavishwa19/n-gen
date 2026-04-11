@@ -1,16 +1,18 @@
-<% if(language==='typescript' ) { %>
-<% for(const [entity,fields] of Object.entries(schemas)) { %>
-export interface <%=entity.charAt(0).toUpperCase() + entity.slice(1) %>Payload {
-<% for(const field of fields) { %>
+<%_ if (language === 'typescript') { _%>
+<%_ for (const [entity, fields] of Object.entries(schemas)) { 
+const typeName = entity.charAt(0).toUpperCase() + entity.slice(1);
+_%>
+export interface <%= typeName %>Payload {
+<%_ for (const field of fields) { _%>
   <%= field.name %>: <%= field.type %>;
-<% } %>
+<%_ } _%>
 }
 
-export interface <%=entity.charAt(0).toUpperCase() + entity.slice(1) %> extends <%=entity.charAt(0).toUpperCase() + entity.slice(1) %>Payload {
-  id:string;
-  createdAt:string;
-  updatedAt:string;
+export interface <%= typeName %> extends <%= typeName %>Payload {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-<% } %>
-<% } %>
+<%_ } _%>
+<%_ } _%>

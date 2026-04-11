@@ -1,28 +1,28 @@
-<% 
+<%
 const toCamel = (str) => str.charAt(0).toLowerCase() + str.slice(1);
 const toPlural = (str) => str + 's';
 %>
 
-<% if (type === 'esm') { %>
+<%_ if (type === 'esm') { _%>
 import express from 'express';
-<% for (const api of apis) { %>
+<%_ for (const api of apis) { _%>
 import <%= toCamel(api) %>Router from './<%= api %>';
-<% } %>
-<% } else { %>
+<%_ } _%>
+<%_ } else { _%>
 const express = require('express');
-<% for (const api of apis) { %>
+<%_ for (const api of apis) { _%>
 const <%= toCamel(api) %>Router = require('./<%= api %>');
-<% } %>
-<% } %>
+<%_ } _%>
+<%_ } _%>
 
 const router = express.Router();
 
-<% for (const api of apis) { %>
+<%_ for (const api of apis) { _%>
 router.use('/<%= toPlural(api) %>', <%= toCamel(api) %>Router);
-<% } %>
+<%_ } _%>
 
-<% if (type === 'esm') { %>
+<%_ if (type === 'esm') { _%>
 export default router;
-<% } else { %>
+<%_ } else { _%>
 module.exports = router;
-<% } %>
+<%_ } _%>

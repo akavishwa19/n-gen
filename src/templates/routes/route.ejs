@@ -1,10 +1,11 @@
-<% if(type==='esm'){ %>
+<%_ if (type === 'esm') { _%>
 import express from 'express';
 import { create, update, remove, get, list } from '../controllers/<%= api %>';
-<% } else { %>
-const express = require('express') ;
+<%_ } else { _%>
+const express = require('express');
 const { create, update, remove, get, list } = require('../controllers/<%= api %>');
-<% } %>
+<%_ } _%>
+
 const router = express.Router();
 
 router.post('/', create);
@@ -12,8 +13,9 @@ router.put('/:id', update);
 router.delete('/:id', remove);
 router.get('/:id', get);
 router.get('/list', list);
-<% if(type ==='esm') { %>
+
+<%_ if (type === 'esm') { _%>
 export default router;
-<% } else { %>
+<%_ } else { _%>
 module.exports = router;
-<% } %>    
+<%_ } _%>

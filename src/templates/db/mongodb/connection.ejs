@@ -1,14 +1,14 @@
-<% if(type==='esm') { %>
-import { MongoClient<% if(language==='typescript') { %>, Db<% } %> } from 'mongodb';
-<% if (logger === 'yes') { %>
+<%_ if (type === 'esm') { _%>
+import { MongoClient<%_ if (language === 'typescript') { _%>, Db<%_ } _%> } from 'mongodb';
+<%_ if (logger === 'yes') { _%>
 import logger from '../utils/logger';
-<% } %>
-<% } else { %>
+<%_ } _%>
+<%_ } else { _%>
 const { MongoClient } = require('mongodb');
-<% if (logger === 'yes') { %>
+<%_ if (logger === 'yes') { _%>
 const logger = require('../utils/logger');
-<% } %>
-<% } %>
+<%_ } _%>
+<%_ } _%>
 
 <%
 const logError = logger === 'yes' ? 'logger.error' : 'console.error';
@@ -19,28 +19,28 @@ const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri);
 
-let db <% if(language==='typescript') { %>: Db <% } %>;
+let db<%_ if (language === 'typescript') { _%>: Db<%_ } _%>;
 
-const connectToDb = async () <% if (language === 'typescript') { %>: Promise<void><% } %> => {
+const connectToDb = async ()<%_ if (language === 'typescript') { _%>: Promise<void><%_ } _%> => {
   try {
     await client.connect();
     db = client.db(process.env.DB_NAME);
     <%= logInfo %>('connected to mongodb successfully');
-  } catch (error <% if(language==='typescript') { %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'error connecting to mongodb');
     throw new Error('error connecting to mongodb');
   }
 };
 
-const getDb = () <% if (language === 'typescript') { %>: Db<% } %> => {
+const getDb = ()<%_ if (language === 'typescript') { _%>: Db<%_ } _%> => {
   if (!db) {
     throw new Error('database not initialized. Call connectToDb first.');
   }
   return db;
 };
 
-<% if(type==='esm') { %>
+<%_ if (type === 'esm') { _%>
 export { client, connectToDb, getDb };
-<% } else { %>
+<%_ } else { _%>
 module.exports = { client, connectToDb, getDb };
-<% } %>
+<%_ } _%>

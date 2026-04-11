@@ -1,21 +1,21 @@
-<% if(type==='esm') { %>
-import mysql<% if(language==='typescript') { %>,{ PoolOptions }<% } %> from 'mysql2/promise';
-<% if (logger === 'yes') { %>
+<%_ if (type === 'esm') { _%>
+import mysql<%_ if (language === 'typescript') { _%>, { PoolOptions }<%_ } _%> from 'mysql2/promise';
+<%_ if (logger === 'yes') { _%>
 import logger from '../utils/logger';
-<% } %>
-<% } else { %>
+<%_ } _%>
+<%_ } else { _%>
 const mysql = require('mysql2/promise');
-<% if (logger === 'yes') { %>
+<%_ if (logger === 'yes') { _%>
 const logger = require('../utils/logger');
-<% } %>
-<% } %>
+<%_ } _%>
+<%_ } _%>
 
 <%
 const logError = logger === 'yes' ? 'logger.error' : 'console.error';
 const logInfo = logger === 'yes' ? 'logger.info' : 'console.log';
 %>
 
-const dbConfig <% if (language==='typescript') { %>: PoolOptions<% } %> = {
+const dbConfig<%_ if (language === 'typescript') { _%>: PoolOptions<%_ } _%> = {
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 3306,
   user: process.env.DB_USER,
@@ -25,19 +25,19 @@ const dbConfig <% if (language==='typescript') { %>: PoolOptions<% } %> = {
 
 const dbClient = mysql.createPool(dbConfig);
 
-const connectToDb = async () <% if (language === 'typescript') { %>: Promise<void><% } %> => {
+const connectToDb = async ()<%_ if (language === 'typescript') { _%>: Promise<void><%_ } _%> => {
   try {
     const connection = await dbClient.getConnection();
     <%= logInfo %>('connected to database successfully');
     connection.release();
-  } catch (error <% if(language==='typescript') { %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'error connecting to database');
     throw new Error('error connecting to database');
   }
 };
 
-<% if(type==='esm') { %>
+<%_ if (type === 'esm') { _%>
 export { dbClient, connectToDb };
-<% } else { %>
+<%_ } else { _%>
 module.exports = { dbClient, connectToDb };
-<% } %>
+<%_ } _%>

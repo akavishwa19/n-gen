@@ -4,30 +4,30 @@ const className = typeName + 'Service';
 const modelName = typeName + 's';
 %>
 
-<% if(type==='esm') { %>
+<%_ if (type === 'esm') { _%>
 import { v4 as uuidv4 } from 'uuid';
 import { <%= modelName %> } from '../models/<%= entity %>';
-<% if(language==='typescript') { %>
+<%_ if (language === 'typescript') { _%>
 import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
-<% } %>
-<% } else { %>
+<%_ } _%>
+<%_ } else { _%>
 const { v4: uuidv4 } = require('uuid');
 const { <%= modelName %> } = require('../models/<%= entity %>');
-<% } %>
+<%_ } _%>
 
 class <%= className %> {
   static async create(
-    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
-  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    payload<%_ if (language === 'typescript') { _%>: <%= typeName %>Payload<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<string><%_ } _%> {
     const id = uuidv4();
     await <%= modelName %>.insert(id, payload);
     return id;
   }
 
   static async update(
-    id<% if(language==='typescript') { %>: string<% } %>,
-    payload<% if(language==='typescript') { %>: <%= typeName %>Payload<% } %>
-  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>,
+    payload<%_ if (language === 'typescript') { _%>: <%= typeName %>Payload<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<string><%_ } _%> {
     const existing = await <%= modelName %>.get(id);
     if (!existing) {
       throw new Error('<%= typeName %> with provided id does not exist');
@@ -38,8 +38,8 @@ class <%= className %> {
   }
 
   static async get(
-    id<% if(language==='typescript') { %>: string<% } %>
-  )<% if(language==='typescript') { %>: Promise<<%= typeName %>><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<<%= typeName %>><%_ } _%> {
     const data = await <%= modelName %>.get(id);
     if (!data) {
       throw new Error('<%= typeName %> does not exist');
@@ -47,13 +47,13 @@ class <%= className %> {
     return data;
   }
 
-  static async list()<% if(language==='typescript') { %>: Promise<<%= typeName %>[]><% } %> {
+  static async list()<%_ if (language === 'typescript') { _%>: Promise<<%= typeName %>[]><%_ } _%> {
     return <%= modelName %>.list();
   }
 
   static async delete(
-    id<% if(language==='typescript') { %>: string<% } %>
-  )<% if(language==='typescript') { %>: Promise<string><% } %> {
+    id<%_ if (language === 'typescript') { _%>: string<%_ } _%>
+  )<%_ if (language === 'typescript') { _%>: Promise<string><%_ } _%> {
     const existing = await <%= modelName %>.get(id);
     if (!existing) {
       throw new Error('<%= typeName %> does not exist');
@@ -64,8 +64,8 @@ class <%= className %> {
   }
 }
 
-<% if(type==='esm') { %>
+<%_ if (type === 'esm') { _%>
 export { <%= className %> };
-<% } else { %>
+<%_ } else { _%>
 module.exports = { <%= className %> };
-<% } %>
+<%_ } _%>

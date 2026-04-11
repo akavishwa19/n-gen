@@ -1,43 +1,43 @@
-<% 
+<%
 const entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
 const className = entityName + 's';
 %>
 
-<% if (type === 'esm') { %>
+<%_ if (type === 'esm') { _%>
 import { <%= className %> } from '../models/<%= entity %>';
 import { v4 as uuidv4 } from 'uuid';
-<% if (logger === 'yes') { %>
+<%_ if (logger === 'yes') { _%>
 import logger from '../utils/logger';
-<% } %>
-<% if (language === 'typescript') { %>
+<%_ } _%>
+<%_ if (language === 'typescript') { _%>
 import { Request, Response } from 'express';
-<% } %>
-<% } else { %>
+<%_ } _%>
+<%_ } else { _%>
 const { <%= className %> } = require('../models/<%= entity %>');
 const { v4: uuidv4 } = require('uuid');
-<% if (logger === 'yes') { %>
+<%_ if (logger === 'yes') { _%>
 const logger = require('../utils/logger');
-<% } %>
-<% } %>
+<%_ } _%>
+<%_ } _%>
 
 <%
 const logError = logger === 'yes' ? 'logger.error' : 'console.error';
 const logInfo = logger === 'yes' ? 'logger.info' : 'console.log';
 %>
 
-const create = async (req<% if(language==='typescript'){ %>: Request<% } %>, res<% if(language==='typescript'){ %>: Response<% } %>) => {
+const create = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
     const id = uuidv4();
     await <%= className %>.insert(id, req.body);
     <%= logInfo %>('Created <%= entity %> with id:', id);
     return res.status(201).json({ success: true, data: { id } });
-  } catch (error<% if(language==='typescript'){ %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'Failed to create <%= entity %>');
     return res.status(500).json({ success: false, message: 'Failed to create <%= entity %>' });
   }
 };
 
-const update = async (req<% if(language==='typescript'){ %>: Request<% } %>, res<% if(language==='typescript'){ %>: Response<% } %>) => {
+const update = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
     const { id } = req.params;
 
@@ -53,13 +53,13 @@ const update = async (req<% if(language==='typescript'){ %>: Request<% } %>, res
     await <%= className %>.update(id, req.body);
     <%= logInfo %>('Updated <%= entity %> with id:', id);
     return res.status(200).json({ success: true, data: { id } });
-  } catch (error<% if(language==='typescript'){ %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'Failed to update <%= entity %>');
     return res.status(500).json({ success: false, message: 'Failed to update <%= entity %>' });
   }
 };
 
-const get = async (req<% if(language==='typescript'){ %>: Request<% } %>, res<% if(language==='typescript'){ %>: Response<% } %>) => {
+const get = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
     const { id } = req.params;
 
@@ -74,23 +74,23 @@ const get = async (req<% if(language==='typescript'){ %>: Request<% } %>, res<% 
     }
 
     return res.status(200).json({ success: true, data });
-  } catch (error<% if(language==='typescript'){ %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'Failed to fetch <%= entity %>');
     return res.status(500).json({ success: false, message: 'Failed to fetch <%= entity %>' });
   }
 };
 
-const list = async (_req<% if(language==='typescript'){ %>: Request<% } %>, res<% if(language==='typescript'){ %>: Response<% } %>) => {
+const list = async (_req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
     const data = await <%= className %>.list();
     return res.status(200).json({ success: true, data });
-  } catch (error<% if(language==='typescript'){ %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'Failed to list <%= entity %>');
     return res.status(500).json({ success: false, message: 'Failed to list <%= entity %>' });
   }
 };
 
-const remove = async (req<% if(language==='typescript'){ %>: Request<% } %>, res<% if(language==='typescript'){ %>: Response<% } %>) => {
+const remove = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
     const { id } = req.params;
 
@@ -106,14 +106,14 @@ const remove = async (req<% if(language==='typescript'){ %>: Request<% } %>, res
     await <%= className %>.delete(id);
     <%= logInfo %>('Deleted <%= entity %> with id:', id);
     return res.status(200).json({ success: true, data: { id } });
-  } catch (error<% if(language==='typescript'){ %>: unknown<% } %>) {
+  } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
     <%= logError %>({ error }, 'Failed to delete <%= entity %>');
     return res.status(500).json({ success: false, message: 'Failed to delete <%= entity %>' });
   }
 };
 
-<% if (type === 'esm') { %>
+<%_ if (type === 'esm') { _%>
 export { create, update, get, list, remove };
-<% } else { %>
+<%_ } else { _%>
 module.exports = { create, update, get, list, remove };
-<% } %>
+<%_ } _%>
