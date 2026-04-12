@@ -1,18 +1,18 @@
 <%
-const typeName = entity.charAt(0).toUpperCase() + entity.slice(1);
+const typeName = api.charAt(0).toUpperCase() + api.slice(1);
 const className = typeName + 'Service';
 const modelName = typeName + 's';
 %>
 
 <%_ if (type === 'esm') { _%>
 import { v4 as uuidv4 } from 'uuid';
-import { <%= modelName %> } from '../models/<%= entity %>';
+import { <%= modelName %> } from '../models/<%= api %>';
 <%_ if (language === 'typescript') { _%>
-import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
+import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= api %>';
 <%_ } _%>
 <%_ } else { _%>
 const { v4: uuidv4 } = require('uuid');
-const { <%= modelName %> } = require('../models/<%= entity %>');
+const { <%= modelName %> } = require('../models/<%= api %>');
 <%_ } _%>
 
 class <%= className %> {

@@ -1,9 +1,9 @@
 <%
-const entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
+const apiName = api.charAt(0).toUpperCase() + api.slice(1);
 %>
 
 <%_ if (type === 'esm') { _%>
-import { <%= entityName %>Service } from '../services/<%= entity %>';
+import { <%= apiName %>Service } from '../services/<%= api %>';
 <%_ if (logger === 'yes') { _%>
 import logger from '../utils/logger';
 <%_ } _%>
@@ -11,7 +11,7 @@ import logger from '../utils/logger';
 import { Request, Response } from 'express';
 <%_ } _%>
 <%_ } else { _%>
-const { <%= entityName %>Service } = require('../services/<%= entity %>');
+const { <%= apiName %>Service } = require('../services/<%= api %>');
 <%_ if (logger === 'yes') { _%>
 const logger = require('../utils/logger');
 <%_ } _%>
@@ -24,12 +24,12 @@ const logInfo = logger === 'yes' ? 'logger.info' : 'console.log';
 
 const create = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
-    const id = await <%= entityName %>Service.create(req.body);
-    <%= logInfo %>('Created <%= entity %> with id:', id);
+    const id = await <%= apiName %>Service.create(req.body);
+    <%= logInfo %>('Created <%= api %> with id:', id);
     return res.status(201).json({ success: true, data: { id } });
   } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
-    <%= logError %>({ error }, 'Failed to create <%= entity %>');
-    return res.status(500).json({ success: false, message: 'Failed to create <%= entity %>' });
+    <%= logError %>({ error }, 'Failed to create <%= api %>');
+    return res.status(500).json({ success: false, message: 'Failed to create <%= api %>' });
   }
 };
 
@@ -41,12 +41,12 @@ const update = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } 
       return res.status(400).json({ success: false, message: 'id is required' });
     }
 
-    const updatedId = await <%= entityName %>Service.update(id, req.body);
-    <%= logInfo %>('Updated <%= entity %> with id:', updatedId);
+    const updatedId = await <%= apiName %>Service.update(id, req.body);
+    <%= logInfo %>('Updated <%= api %> with id:', updatedId);
     return res.status(200).json({ success: true, data: { id: updatedId } });
   } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
-    <%= logError %>({ error }, 'Failed to update <%= entity %>');
-    return res.status(500).json({ success: false, message: 'Failed to update <%= entity %>' });
+    <%= logError %>({ error }, 'Failed to update <%= api %>');
+    return res.status(500).json({ success: false, message: 'Failed to update <%= api %>' });
   }
 };
 
@@ -58,21 +58,21 @@ const get = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>
       return res.status(400).json({ success: false, message: 'id is required' });
     }
 
-    const data = await <%= entityName %>Service.get(id);
+    const data = await <%= apiName %>Service.get(id);
     return res.status(200).json({ success: true, data });
   } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
-    <%= logError %>({ error }, 'Failed to fetch <%= entity %>');
-    return res.status(500).json({ success: false, message: 'Failed to fetch <%= entity %>' });
+    <%= logError %>({ error }, 'Failed to fetch <%= api %>');
+    return res.status(500).json({ success: false, message: 'Failed to fetch <%= api %>' });
   }
 };
 
 const list = async (_req<%_ if (language === 'typescript') { _%>: Request<%_ } _%>, res<%_ if (language === 'typescript') { _%>: Response<%_ } _%>) => {
   try {
-    const data = await <%= entityName %>Service.list();
+    const data = await <%= apiName %>Service.list();
     return res.status(200).json({ success: true, data });
   } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
-    <%= logError %>({ error }, 'Failed to list <%= entity %>');
-    return res.status(500).json({ success: false, message: 'Failed to list <%= entity %>' });
+    <%= logError %>({ error }, 'Failed to list <%= api %>');
+    return res.status(500).json({ success: false, message: 'Failed to list <%= api %>' });
   }
 };
 
@@ -84,12 +84,12 @@ const remove = async (req<%_ if (language === 'typescript') { _%>: Request<%_ } 
       return res.status(400).json({ success: false, message: 'id is required' });
     }
 
-    await <%= entityName %>Service.delete(id);
-    <%= logInfo %>('Deleted <%= entity %> with id:', id);
+    await <%= apiName %>Service.delete(id);
+    <%= logInfo %>('Deleted <%= api %> with id:', id);
     return res.status(200).json({ success: true, data: { id } });
   } catch (error<%_ if (language === 'typescript') { _%>: unknown<%_ } _%>) {
-    <%= logError %>({ error }, 'Failed to delete <%= entity %>');
-    return res.status(500).json({ success: false, message: 'Failed to delete <%= entity %>' });
+    <%= logError %>({ error }, 'Failed to delete <%= api %>');
+    return res.status(500).json({ success: false, message: 'Failed to delete <%= api %>' });
   }
 };
 
