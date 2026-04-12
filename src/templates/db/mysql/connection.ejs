@@ -9,12 +9,10 @@ const mysql = require('mysql2/promise');
 const logger = require('../utils/logger');
 <%_ } _%>
 <%_ } _%>
-
 <%
 const logError = logger === 'yes' ? 'logger.error' : 'console.error';
 const logInfo = logger === 'yes' ? 'logger.info' : 'console.log';
 %>
-
 const dbConfig<%_ if (language === 'typescript') { _%>: PoolOptions<%_ } _%> = {
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 3306,

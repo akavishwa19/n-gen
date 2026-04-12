@@ -9,12 +9,10 @@ const { MongoClient } = require('mongodb');
 const logger = require('../utils/logger');
 <%_ } _%>
 <%_ } _%>
-
 <%
 const logError = logger === 'yes' ? 'logger.error' : 'console.error';
 const logInfo = logger === 'yes' ? 'logger.info' : 'console.log';
 %>
-
 const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri);
