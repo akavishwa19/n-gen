@@ -1,19 +1,106 @@
-import renderTemplate from '../utils/renderTemplate';
 import { readConfig } from '../utils/config';
+import buildTemplate from '../utils/buildTemplate';
+import { buildPath, getCliRoot, getRoot } from '../utils/file';
 
 async function generateApi() {
-  const config = await readConfig();
+  //eslint-disable-next-line
+  const { language, type, database, docker, structure, logger, apis, schemas } =
+    await readConfig();
 
-  if (!config.apis) {
-    throw new Error('API entity is required to generate template');
+  const outputExt = language === 'javascript' ? '.js' : '.ts';
+
+  const cliRoot = getCliRoot();
+  const appRoot = getRoot();
+  const templateRoot = buildPath(cliRoot, 'src', 'templates');
+  const outputRoot = buildPath(appRoot, 'src');
+
+  //index file
+  buildTemplate(
+    buildPath(templateRoot, 'app', 'app.ejs'),
+    buildPath(outputRoot, `app${outputExt}`),
+    {
+      language,
+      type,
+      logger
+    }
+  );
+
+  //logger
+  buildTemplate(
+    buildPath(templateRoot, 'utils', 'logger.ejs'),
+    buildPath(outputRoot, 'utils', `logger${outputExt}`),
+    {
+      language,
+      type,
+      logger
+    }
+  );
+
+  //dockerfiles
+  buildTemplate(
+    buildPath(templateRoot, 'docker', 'dockerfile.ejs'),
+    buildPath(outputRoot, 'containers', `Dockerfile`)
+  );
+
+  buildTemplate(
+    buildPath(templateRoot, 'docker', 'compose.ejs'),
+    buildPath(outputRoot, `compose.yaml`),
+    {
+      database
+    }
+  );
+
+  //apis
+  //index route
+  buildTemplate(
+    buildPath(templateRoot, 'routes', 'index.ejs'),
+    buildPath(outputRoot, 'routes', `index${outputExt}`),
+    {
+      type,
+      apis
+    }
+  );
+
+  //routes
+  for (const api of apis) {
+    buildTemplate(
+      buildPath(templateRoot, 'routes', 'routes.ejs'),
+      buildPath(outputRoot, 'routes', `${api}${outputExt}`),
+      {
+        type,
+        api
+      }
+    );
   }
 
-  for (const api of config.apis) {
-    await renderTemplate('route.ejs', {
-      api: api,
-      type: config.type,
-      language: config.language
-    });
+  //types
+  if (language === 'typescript') {
+    for (const api of apis) {
+      buildTemplate(
+        buildPath(templateRoot, 'types', 'type.ejs'),
+        buildPath(outputRoot, 'types', `${api}${outputExt}`),
+        {
+          language,
+          schemas
+        }
+      );
+    }
+  }
+
+  //controllers
+  if (structure === 'basic') {
+    for (const api of apis) {
+      buildTemplate(
+        buildPath(templateRoot, 'controllers', 'controller-basic.ejs'),
+        buildPath(outputRoot, 'controllers', `${api}${outputExt}`),
+        {
+          type,
+          logger,
+          language,
+          api
+        }
+      );
+    }
   }
 }
 
