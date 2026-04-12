@@ -1,4 +1,3 @@
-//main app entrypoint
 import generateApi from './command/generateApi';
 import defineConfig from './prompt/cli';
 import logger from './utils/logger';
