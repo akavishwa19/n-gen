@@ -1,7 +1,7 @@
 <%
-const typeName = entity.charAt(0).toUpperCase() + entity.slice(1);
+const typeName = api.charAt(0).toUpperCase() + api.slice(1);
 const className = typeName + 's';
-const collectionName = entity.toLowerCase() + 's';
+const collectionName = api.toLowerCase() + 's';
 
 const fieldNames = fields.map(f => f.name);
 %>
@@ -9,7 +9,7 @@ const fieldNames = fields.map(f => f.name);
 <%_ if (type === 'esm') { _%>
 import { getDb } from '../db/client';
 <%_ if (language === 'typescript') { _%>
-import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
+import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= api %>';
 <%_ } _%>
 <%_ } else { _%>
 const { getDb } = require('../db/client');

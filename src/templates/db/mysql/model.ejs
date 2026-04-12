@@ -1,7 +1,7 @@
 <%
-const typeName = entity.charAt(0).toUpperCase() + entity.slice(1);
+const typeName = api.charAt(0).toUpperCase() + api.slice(1);
 const className = typeName + 's';
-const tableName = entity.toLowerCase() + 's';
+const tableName = api.toLowerCase() + 's';
 
 const fieldNames = fields.map(f => f.name);
 
@@ -17,7 +17,7 @@ const updateFields = fieldNames.map(f => `${f} = ?`).join(', ');
 <%_ if (type === 'esm') { _%>
 import { dbClient } from '../db/client';
 <%_ if (language === 'typescript') { _%>
-import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= entity %>';
+import { <%= typeName %>, <%= typeName %>Payload } from '../types/<%= api %>';
 import { RowDataPacket } from 'mysql2';
 <%_ } _%>
 <%_ } else { _%>
