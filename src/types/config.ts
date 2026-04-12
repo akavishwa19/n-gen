@@ -3,7 +3,7 @@ export interface Config {
   type: 'commonjs' | 'esm';
   database: 'mongodb' | 'mysql';
   docker: 'yes' | 'no';
-  structure: 'basic' | 'advanced' | 'ultra';
+  structure: 'basic' | 'advanced';
   logger: 'yes' | 'no';
   apis: string[];
   schemas: Record<string, Fields[]>;
