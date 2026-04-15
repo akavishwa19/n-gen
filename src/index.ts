@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import generateApi from './command/generateApi';
 import defineConfig from './prompt/cli';
 import logger from './utils/logger';
