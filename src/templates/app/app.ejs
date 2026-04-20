@@ -43,7 +43,7 @@ const startServer = async ()<%_ if (language === 'typescript') { _%>: Promise<vo
   });
 };
 
-function stopServer(signal<%_ if (language === 'typescript') { _%>: string, code: number<%_ } _%>) {
+function stopServer(signal<%_ if (language === 'typescript') { _%>: string<%_ } _%>, code<%_ if (language === 'typescript') { _%>: number<%_ } _%>) {
   <%= logInfo %>(`recieved ${signal} , stopping server gracefully`);
   if (server) {
     server.close(() => {
