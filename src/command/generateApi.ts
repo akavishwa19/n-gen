@@ -104,7 +104,7 @@ async function generateApi() {
     }
 
     buildTemplate(
-      buildPath(templateRoot, 'base', 'tsconfig.json'),
+      buildPath(templateRoot, 'base', 'tsconfig.ejs'),
       buildPath(outputRoot, '..', 'tsconfig.json')
     );
   }
